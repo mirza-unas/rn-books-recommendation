@@ -20,15 +20,16 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
-  const { register } = useAuthStore();
+  const { register, isLoading } = useAuthStore();
 
   const handleSignUp = async () => {
+    console.log("email", email);
     const result = await register({ email, username, password });
 
-    console.log(result);
+    if (!result.success) Alert.alert("Error", result.message);
   };
   return (
     <KeyboardAvoidingView

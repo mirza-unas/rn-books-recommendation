@@ -8,10 +8,13 @@ dotenv.config();
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-
 app.use(express.json());
 app.use(cors());
+
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 app.use("/api/auth", authRoute);
 app.use("/api/books", bookRoute);
@@ -19,7 +22,12 @@ app.use("/api/books", bookRoute);
 app.get("/", (req, res) => {
   res.send("API is running");
 });
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  connectDB();
-});
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    connectDB();
+  });
+}
+
+export default app;
