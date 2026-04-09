@@ -11,6 +11,10 @@ const protectRoute = async (res, req, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    if(!decoded){
+      return res.status(401).json({message: "No unauthorized token, access denied"})
+    }
+
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) return res.status(401).json({ message: "User not found" });
