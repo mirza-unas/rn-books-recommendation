@@ -11,7 +11,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
 
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export const useAuthStore = create((set) => ({
       }
 
       await AsyncStorage.setItem("user", JSON.stringify(data.user));
-      await AsyncStorage.setItem("token", JSON.stringify(data.token));
+      await AsyncStorage.setItem("token", data.token);
 
       set({ user: data.user, token: data.token });
 
@@ -41,7 +41,7 @@ export const useAuthStore = create((set) => ({
   login: async ({ email, password }) => {
     set({ isLoading: true });
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export const useAuthStore = create((set) => ({
         throw new Error(data.message || "Something went wrong");
       }
       await AsyncStorage.setItem("user", JSON.stringify(data.user));
-      await AsyncStorage.setItem("token", JSON.stringify(data.token));
+      await AsyncStorage.setItem("token", data.token);
 
       set({ user: data.user, token: data.token });
 
@@ -74,6 +74,7 @@ export const useAuthStore = create((set) => ({
       const userJson = await AsyncStorage.getItem("user");
 
       const user = userJson ? JSON.parse(userJson) : null;
+
       set({ user, token });
     } catch (error) {
       console.log("Auth check failed", error);

@@ -4,7 +4,7 @@ import cloudinary from "../lib/cloudinary.js";
 import Book from "../models/Book.js";
 const router = express.Router();
 
-router.post("/", protectRoute, async (req, res) => {
+router.post("/create", protectRoute, async (req, res) => {
   try {
     const { title, caption, image, rating } = req.body;
 
@@ -18,7 +18,7 @@ router.post("/", protectRoute, async (req, res) => {
 
     // save book to database
 
-    const book = new Book({
+    const newBook = new Book({
       title,
       caption,
       image: imageUrl,
@@ -26,7 +26,7 @@ router.post("/", protectRoute, async (req, res) => {
       user: req.user._id,
     });
 
-    await book.save();
+    await newBook.save();
 
     res.status(201).json(newBook);
   } catch (error) {
@@ -38,7 +38,7 @@ router.post("/", protectRoute, async (req, res) => {
 router.get("/", protectRoute, async (req, res) => {
   try {
     const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
+    const limit = req.query.limit || 2;
     const skip = (page - 1) * limit;
     const books = await Book.find()
       .sort({ createdAt: 1 })

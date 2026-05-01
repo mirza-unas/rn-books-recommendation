@@ -1,21 +1,21 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-const protectRoute = async (res, req, next) => {
+const protectRoute = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
 
-    if (token)
+    console.log("token :", token);
+
+    if (!token)
       return res
         .status(401)
         .json({ message: "No unauthorized token, access denied" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if(!decoded){
-      return res.status(401).json({message: "No unauthorized token, access denied"})
-    }
+    console.log("decoded :", decoded);
 
     const user = await User.findById(decoded.userId).select("-password");
+    console.log("user :", user);
 
     if (!user) return res.status(401).json({ message: "User not found" });
 
