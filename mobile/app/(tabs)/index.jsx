@@ -1,4 +1,10 @@
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { API_URL } from "../../constants/api";
@@ -121,6 +127,14 @@ const index = () => {
         showsHorizontalScrollIndicator={false}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchBooks(1, true)}
+            colors={[COLORS.primary]}
+            tintColor={[COLORS.primary]}
+          />
+        }
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.headerTitle}>BookWorm 🐛</Text>
